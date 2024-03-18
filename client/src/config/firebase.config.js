@@ -1,18 +1,17 @@
-import {getApp,getApps, initializeApp} from "firebase/app"
-import {getStorage} from "firebase/storage"
-
+import { getApp, getApps, initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB8SLTYDmGY6olvQ5dQ0Pc9Ct420PNpaAQ",
-    authDomain: "cipher-rep.firebaseapp.com",
-    projectId: "cipher-rep",
-    storageBucket: "cipher-rep.appspot.com",
-    messagingSenderId: "1058049020237",
-    appId: "1:1058049020237:web:f4f422969f4985e684a704",
-    measurementId: "G-QRVJDDNEEM"
-  };
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 
-  const app = getApps.length >0?getApp() : initializeApp(firebaseConfig);
-  const storage = getStorage(app);
+
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+const storage = getStorage(app);
 
 export { app, storage };
