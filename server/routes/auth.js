@@ -12,13 +12,14 @@ try{
         res.status(500).json({message:"Un Authorized"})
     }
     else{
-        //i am checking wheather user exist or not
-        const userExist = await user.findOne({"user_id":decodedValue.user_id})
+        //i am checking wheather user exist or not        // const userExist = await user.findOne({$or: [{user_id: decodedValue.user_id}, {email: decodedValue.email}]});
+
+        const userExist = await user.findOne({email: decodedValue.email})
         if(!userExist){
             newUserData(decodedValue,req, res)
         }
         else{
-            res.status(200).json({message:"Already Exist"})
+            updateNewUserData(decodedValue,req, res)
         }
     }
 
@@ -52,4 +53,19 @@ const newUserData = async(decodedValue,req, res) => {
     
 }
 
+const updateNewUserData = async(decodedValue,req, res) => {
+    const filter = {email:decodedValue.email};
+    const options = { upsert: true,new: true };
+    try{
+        const result = await user.findOneAndUpdate(
+            filter,
+            {auth_time:decodedValue.auth_time},
+            options
+            );
+        res.status(200).send({user:result})
+    }
+    catch(error){
+        res.status(400).send({sucess:false, message:error})
+    }
+}
 module.exports = router; 
