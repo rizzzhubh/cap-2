@@ -20,6 +20,17 @@ app.get("/", (req, res) => {
 const userRoute = require("./routes/auth")
 app.use("/api/users", userRoute);
 
+// artist routes
+const artistRoutes = require("./routes/artist")
+app.use("/api/artist", artistRoutes)
+
+// album routes
+const albumRoutes = require("./routes/album")
+app.use("/api/album", albumRoutes)
+
+// songs routes
+const songRoutes = require("./routes/songs")
+app.use("/api/songs", songRoutes)
 
 
 app.listen(3000, () => {

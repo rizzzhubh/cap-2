@@ -2,13 +2,14 @@ import React, { useEffect } from 'react'
 import "./App.css"
 import { useState } from 'react'
 import {Route,Routes,useNavigate} from "react-router-dom"
-import {Home, Login} from "./component"
+import {Home, Login,Dashboard} from "./component"
 import { app } from './config/firebase.config'
 import { getAuth } from 'firebase/auth'
 import { motion, AnimatePresence } from "framer-motion";
 import { validateuser } from '../api'
 import { useStateValue } from './context/StateProvider'
 import { actionType } from './context/reducer'
+
 
 
 const App = () => {
@@ -48,10 +49,11 @@ const App = () => {
   return (
     <AnimatePresence>
     <>
-    <div className='h-auto min-w-[680px] bg-blue-400 flex justify-center items-center'>
+    <div className='h-auto min-w-[680px] bg-primary flex justify-center items-center'>
     <Routes>
     <Route path='/login' element={<Login setauth={setauth}/>}/>
     <Route path='/*' element={<Home/>}/>
+    <Route path='dashboard/*' element={<Dashboard/>}/>
 
     </Routes>
     </div>

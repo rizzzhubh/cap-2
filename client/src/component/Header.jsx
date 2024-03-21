@@ -16,7 +16,7 @@ const Header = () => {
     }).catch((err)=>{
       console.log(err);
       Navigate("/login");
-    })
+    }) 
   }
   return (
     <header className='w-full p-4 md:py-2 md:px-6  flex  items-center'>
@@ -43,6 +43,19 @@ const Header = () => {
         </NavLink>
         <p className='text-base text-textColor hover:font-semibold duration-150 trasition-all ease-in-out'>My Favourites</p>
         <hr />
+
+        {
+          user?.user?.role === "admin" && (
+          <>
+        <NavLink to ="/dashboard/home">
+        <p className='text-base text-textColor hover:font-semibold duration-150 trasition-all ease-in-out'>Dashboard</p>
+        </NavLink>
+        <hr />
+        </>
+            
+          )
+        }
+
         <p className='text-base text-textColor hover:font-semibold duration-150 trasition-all ease-in-out' onClick={logout}>Sign Out</p>
 
         </motion.div>
