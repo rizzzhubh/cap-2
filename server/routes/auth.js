@@ -68,4 +68,19 @@ const updateNewUserData = async(decodedValue,req, res) => {
         res.status(400).send({sucess:false, message:error})
     }
 }
+
+
+
+router.get("/getUsers", async(req, res) => {
+    const options = {
+        sort: {createdAt: 1}
+    }
+    const cursor = await user.find(options);
+    if(!cursor){
+        res.status(400).send({sucess:false, message:"User not found"})
+    }
+    else{
+        res.status(200).send({sucess:true,users:cursor})
+    }
+})
 module.exports = router; 
