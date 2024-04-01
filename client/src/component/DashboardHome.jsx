@@ -29,7 +29,7 @@ const DashboradHome = () => {
       <DashboardCard/>
       <DashboardCard/>
 
-    </div>
+    </div> 
   )
 }
 

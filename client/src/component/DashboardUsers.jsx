@@ -1,99 +1,78 @@
-// import React, { useEffect, useState } from "react";
-// import { AiOutlineClear } from "react-icons/ai";
-// import { motion } from "framer-motion";
-// import { getAllUsers } from "../../api";
-// import { actionType } from "../context/reducer";
-// import { useStateValue } from "../context/StateProvider";
-// // import DashboardUserCard from "./DashboardUserCard";
+import React, { useEffect, useState } from "react";
+import { AiOutlineClear } from "react-icons/ai";
+import { motion } from "framer-motion";
+import { getAllUsers } from "../../api";
+import { useStateValue } from "../context/StateProvider";
+import { actionType } from "../context/reducer";
 
-// const DashboardUser = () => {
-//   const [emailFilter, setEmailFilter] = useState("");  
-//   const [isFocus, setIsFocus] = useState(false);
 
-//   const [filtereUsers, setFiltereUsers] = useState(null);
+export const DashboardUsersCard = ({data,index}) => {
+  console.log(data,index)
+  return (
+    <motion.div className="relative w-full rounded-md flex items-center justify-between py-4 bg-lightOverlay cursor-pointer hover:bg-card hover:shadow-md">
+      <div className="w-275 min-w-[160px] flex items-center justify-center">
+      <img src={data.imageurl} alt="" className="w-10 h-10 obbject-cover rounded-md min-w-[40px] shadow-md"/>
 
-//   const [{ allUsers }, dispatch] = useStateValue();
+      </div>
+    </motion.div>
+  )
+}
 
-//   useEffect(() => {
-//     if (!allUsers) {
-//       getAllUsers().then((data) => {
-//         dispatch({
-//           type: actionType.SET_ALL_USERS,
-//           allUsers: data.data,
-//         });
-//       });
-//     }
-//   }, []);
+const DashboardUsers = () => {
+  const [{ allUsers }, dispatch] = useStateValue();
+  useEffect(() => {
+    if (!allUsers || allUsers.length === 0) {
+      getAllUsers()
+        .then((data) => {
+          dispatch({
+            type: actionType.SET_ALL_USERS,
+            allUsers: data.user,
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [allUsers, dispatch]);
 
-//   useEffect(() => {
-//     if (emailFilter) {
-//       const filtered = allUsers.filter(
-//         // prettier-ignore
-//         (data) =>  data.email.includes(emailFilter) || data.name.includes(emailFilter) || data.role.includes(emailFilter)
-//       );
-//       setFiltereUsers(filtered);
-//     }
-//   }, [emailFilter]);
+  return (
+    <div className="w-full p-4 flex items-center justify-center flex-col">
+      <div className="relative w-full py-12 min-h-[400px] overflow-x-scroll my-4 flex flex-col items-center justify-start p-4 border border-gray-300 rounded-md gap-3">
+        <div className="absolute top-4 left-4">
+          <p className="text-sm font-semibold">
+            Count:{" "}
+            <span className="text-xl font-bold text-textColor">
+              {allUsers ? allUsers.length : 0}
+            </span>
+          </p>
+        </div>
+        <div className="w-full min-w-[750px] flex items-center justify-between">
+          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
+            Image
+          </p>
+          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
+            Name
+          </p>
+          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
+            Email
+          </p>
+          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
+            Verified
+          </p>
+          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
+            Created
+          </p>
+          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
+            Role
+          </p>
+        </div>
+        {allUsers &&
+          allUsers.map((data, index) => (
+            <DashboardUsersCard key={index} data={data} index={index} />
+          ))}
+      </div>
+    </div>
+  );
+};
 
-//   return (
-//     <div className="w-full p-4 flex items-center justify-center flex-col">
-//       <div className="w-full flex justify-center items-center gap-24">
-//         <input
-//           type="text"
-//           placeholder="Search here"
-//           className={`w-52 px-4 py-2 border ${
-//             isFocus ? "border-gray-500 shadow-md" : "border-gray-300"
-//           } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-textColor font-semibold`}
-//           value={emailFilter}
-//           onChange={(e) => setEmailFilter(e.target.value)}
-//           onBlur={() => setIsFocus(false)}
-//           onFocus={() => setIsFocus(true)}
-//         />
-
-//         {emailFilter && (
-//           <motion.i
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             whileTap={{ scale: 0.75 }}
-//             onClick={() => {
-//               setEmailFilter("");
-//               setFiltereUsers(null);
-//             }}
-//           >
-//             <AiOutlineClear className="text-3xl text-textColor cursor-pointer" />
-//           </motion.i>
-//         )}
-//       </div>
-
-//       <div className="relative w-full py-12 min-h-[400px] overflow-x-scroll scrollbar-thin scrollbar-track-slate-300 scrollbar-thumb-slate-400 my-4 flex flex-col items-center justify-start p-4 border border-gray-300 rounded-md gap-3">
-//         <div className="absolute top-4 left-4">
-//           <p className="text-xl font-bold">
-//             <span className="text-sm font-semibold text-textColor">
-//               Count :{" "}
-//             </span>
-//             {filtereUsers ? filtereUsers?.length : allUsers?.length}
-//           </p>
-//         </div>
-
-//         <div className="w-full min-w-[750px] flex items-center justify-between">
-//           <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Image</p>
-//           <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Name</p>
-//           <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Email</p>
-//           <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Verified</p>
-//           <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Created</p>
-
-//           <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Role</p>{" "}
-//         </div>
-//         {/* {allUsers && !filtereUsers
-//           ? allUsers?.map((data, i) => (
-//               <DashboardUserCard data={data} key={data._id} index={i} />
-//             ))
-//           : filtereUsers?.map((data, i) => (
-//               <DashboardUserCard data={data} key={data._id} index={i} />
-//             ))} */}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DashboardUser;
+export default DashboardUsers;
