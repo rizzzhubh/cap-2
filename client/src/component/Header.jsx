@@ -9,6 +9,7 @@ import {motion} from "framer-motion"
 const Header = () => {
   const[ismenu, setismenu] = useState(false);
   const [{user},dispatch] = useStateValue();
+  console.log(user);
   const logout = () =>{
     const firebaseAuth = getAuth(app);
     firebaseAuth.signOut().then(()=>{

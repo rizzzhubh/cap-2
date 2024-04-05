@@ -4,7 +4,7 @@ import { useStateValue } from "../context/StateProvider";
 import { motion } from "framer-motion";
 import { MdDelete } from "react-icons/md";
 import { actionType } from "../context/reducer";
-// import { getAllAlbums } from "../api";
+import { getAllAlbums } from "../../api";
 
 const DashboardAlbum = () => {
   const [{ allAlbums }, dispatch] = useStateValue();

@@ -4,7 +4,7 @@ import { useStateValue } from "../context/StateProvider";
 import { Link } from "react-router-dom";
 import { IoLogoInstagram, IoLogoTwitter } from "react-icons/io5";
 // import { MdDelete } from "react-icons/md";
-// import { getAllArtist } from "../api";
+import { getAllArtist } from "../../api";
 import { actionType } from "../context/reducer";
 
 const DashboardArtist = () => {
