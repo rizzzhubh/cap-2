@@ -71,16 +71,37 @@ const updateNewUserData = async(decodedValue,req, res) => {
 
 
 
-router.get("/getUsers", async(req, res) => {
-    const options = {
-        sort: {createdAt: 1}
+// router.get("/getUsers", async(req, res) => {
+//     const options = {
+//         sort: {createdAt: 0}
+//     }
+//     const cursor = await user.find(options);
+//     // res.send({sucess:true,users:cursor})
+//     if(!cursor){
+//         console.log("no user found");
+//         res.status(400).send({sucess:false, message:"User not found"})
+//     }
+//     else{
+//         console.log("found user" ,cursor);
+//         res.status(200).send({sucess:true,users:cursor})
+//     }
+// })
+
+router.get("/getUsers", async (req, res) => {
+    try {
+        const cursor = await user.find().sort({ createdAt: -1 });
+        if (!cursor || cursor.length === 0) {
+            console.log("No user found");
+            return res.status(400).send({ success: false, message: "User not found" });
+        }
+        console.log("Found users:", cursor);
+        res.status(200).send({ success: true, users: cursor });
+    } catch (error) {
+        console.error("Error while fetching users:", error);
+        res.status(500).send({ success: false, message: "Error fetching users", error: error.message });
     }
-    const cursor = await user.find(options);
-    if(!cursor){
-        res.status(400).send({sucess:false, message:"User not found"})
-    }
-    else{
-        res.status(200).send({sucess:true,users:cursor})
-    }
-})
+});
+
+
+
 module.exports = router; 

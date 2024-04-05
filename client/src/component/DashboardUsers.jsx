@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from "react";
 import { AiOutlineClear } from "react-icons/ai";
 import { motion } from "framer-motion";
@@ -5,28 +7,60 @@ import { getAllUsers } from "../../api";
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 
-
-export const DashboardUsersCard = ({data,index}) => {
-  console.log(data,index)
+export const DashboardUsersCard = ({ data, index }) => {
+  const [{ user }, dispatch] = useStateValue();
+  const [isUserRoleUpdated, setIsUserRoleUpdated] = useState(false);
   return (
-    <motion.div className="relative w-full rounded-md flex items-center justify-between py-4 bg-lightOverlay cursor-pointer hover:bg-card hover:shadow-md">
-      <div className="w-275 min-w-[160px] flex items-center justify-center">
-      <img src={data.imageurl} alt="" className="w-10 h-10 obbject-cover rounded-md min-w-[40px] shadow-md"/>
+    <>
+   <tr className="py-4 bg-lightOverlay rounded-md cursor-pointer hover:bg-card hover:shadow-md">
+  <td>
+    <div className="relative rounded-md flex items-start justify-flex-end; py-4">
+      <img src={data.imageurl} referrerPolicy="no-referrer" alt="" className="w-10 h-10 object-cover rounded-md min-w-[30px] text-center shadow-md mx-auto" />
+    </div>
+  </td>
+  <td className="text-base text-textColor w-275 min-w-[160px] text-center">{data.name}</td>
+  <td className="text-base text-textColor w-275 min-w-[160px] text-center">{data.email}</td>
+  <td className="text-base text-textColor w-275 min-w-[160px] text-center">{data.email_verified ? "True" : "False"}</td>
+  <td className="text-base text-textColor w-275 min-w-[160px] text-center">{new Date(data.createdAt).toLocaleString()}</td>
+  <td className="text-base text-textColor w-275 min-w-[160px] text-center">{data.role}</td>
+  {data._id !== (user?.user?._id ?? '') && (
+    <div className="flex justify-center items-center"> {/* Parent container */}
+  <motion.button whileTap={{ scale: 0.75 }} className="text-[11px] font-semibold text-black-200 px-1 mt-7  text-center item-center rounded-sm bg-slate-200" onClick={() => setIsUserRoleUpdated(true)}>
+    {data.role === "admin" ? "Member" : "Admin"}
+  </motion.button>
+</div>
 
-      </div>
-    </motion.div>
-  )
-}
+)}
+{isUserRoleUpdated && (
+ 
+ <motion.div className="absolute z-10 top-6 right-4 flex items-start flex-col gap-4 bg-white shadow-xl rounded-md">
+<br />
+<div className="flex items-center gap-4">
+
+  <p className="text-textcolor text-[14px] font-semibold px-2 h-20"> Are you sure you want to mark the user as <span>{data.role === "admin" ? "Member" : "Admin"}</span>?</p>
+  <motion.button whileTap={{ scale: 0.75 }} className="outline-none border-none text-sm px-4 py-1 rounded-md bg-blue-200 text-black hover:shadow-md" onClick={() => setIsUserRoleUpdated(false)}>Yes</motion.button>
+  <motion.button whileTap={{ scale: 0.75 }} className="outline-none border-none text-sm px-4 py-1 rounded-md bg-blue-200 text-black hover:shadow-md" onClick={() => setIsUserRoleUpdated(false)}>No</motion.button>
+  <br />
+</div>
+</motion.div>
+
+)}
+
+</tr>
+      </>
+  );
+};
 
 const DashboardUsers = () => {
   const [{ allUsers }, dispatch] = useStateValue();
+
   useEffect(() => {
     if (!allUsers || allUsers.length === 0) {
       getAllUsers()
         .then((data) => {
           dispatch({
             type: actionType.SET_ALL_USERS,
-            allUsers: data.user,
+            allUsers: data.users,
           });
         })
         .catch((error) => {
@@ -46,33 +80,32 @@ const DashboardUsers = () => {
             </span>
           </p>
         </div>
-        <div className="w-full min-w-[750px] flex items-center justify-between">
-          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
-            Image
-          </p>
-          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
-            Name
-          </p>
-          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
-            Email
-          </p>
-          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
-            Verified
-          </p>
-          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
-            Created
-          </p>
-          <p className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">
-            Role
-          </p>
-        </div>
-        {allUsers &&
-          allUsers.map((data, index) => (
-            <DashboardUsersCard key={index} data={data} index={index} />
-          ))}
+        <table className="min-w-full">
+          <thead>
+            <tr>
+              <th className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Image</th>
+              <th className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Name</th>
+              <th className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Email</th>
+              <th className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Verified</th>
+              <th className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Created</th>
+              <th className="text-sm text-textColor font-semibold w-275 min-w-[160px] text-center">Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            {allUsers &&
+              allUsers.map((data, index) => (
+                <DashboardUsersCard key={index} data={data} index={index} />
+              ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 };
 
 export default DashboardUsers;
+
+
+
+
+
