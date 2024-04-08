@@ -4,6 +4,10 @@ const songSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    imageURL: {
+        type: String,
+        required: true,
+      },
     songurl: {
         type: String,
         required: true
