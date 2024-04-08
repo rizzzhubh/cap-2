@@ -5,6 +5,7 @@ const songs = require("../models/song");
 router.post("/save", async (req, res) => {
 const newSong = songs({
     name: req.body.name,
+    imageURL: req.body.imageURL,
     songurl: req.body.songurl,
     artist: req.body.artist,
     album: req.body.album,

@@ -3,7 +3,7 @@ import Header from './Header'
 import { NavLink, Route, Routes } from 'react-router-dom'
 import {IoHome} from "react-icons/io5";
 import { isActiveStyles, isNotActiveStyles } from '../utils/styles';
-import { DashboardAlbum, DashboardArtist, DashboardHome, DashboardSongs, DashboardUsers } from '.';
+import { DashboardAlbum, DashboardArtist, DashboardHome, DashboardNewSong, DashboardSongs, DashboardUsers } from '.';
 const Dashboard = () => {
   return (
     <div className='w-full h-auto flex flex-col items-center justify-center bg-primary'>
@@ -23,6 +23,7 @@ const Dashboard = () => {
           <Route path="/Songs" element={<DashboardSongs/>}/>
           <Route path="/artist" element={<DashboardArtist/>}/>
           <Route path="/albums" element={<DashboardAlbum/>}/>
+          <Route path="/newSong" element={<DashboardNewSong/>}/>
          </Routes>
      </div>
          </div>
