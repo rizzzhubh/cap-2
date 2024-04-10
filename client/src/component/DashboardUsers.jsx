@@ -96,6 +96,7 @@ const DashboardUsers = () => {
             type: actionType.SET_ALL_USERS,
             allUsers: data.users,
           });
+          console.log("user dataDU",data);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -126,10 +127,10 @@ const DashboardUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {allUsers &&
-              allUsers.map((data, index) => (
-                <DashboardUsersCard key={index} data={data} index={index} />
-              ))}
+          {allUsers && Array.isArray(allUsers) && allUsers.map((data, i) => (
+    <DashboardUsersCard data={data} key={data._id} index={i} />
+))}
+
           </tbody>
         </table>
       </div>
