@@ -3,9 +3,9 @@ const artist = require("../models/artist");
 
 
 router.post("/save", async (req, res) => {
-const newArtist = artist({
+const newArtist = new artist({
     name: req.body.name,
-    imageurl: req.body.imageurl,
+    imageurl: req.body.imageURL,
     twitter: req.body.twitter,
     instagram: req.body.instagram
 })
@@ -13,6 +13,7 @@ const newArtist = artist({
 try{
     const savedArtist = await newArtist.save();
     res.status(200).send({sucess:true,artist:savedArtist})
+
 }
 catch(error){
     res.status(400).send({sucess:false, message:error})

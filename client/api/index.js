@@ -60,7 +60,7 @@ export const getAllArtist = async () => {
   export const saveNewSong = async (data) => {
     try {
       const res = await axios.post(`${baseURL}api/songs/save`, { ...data });
-      return res.data.Song; // Assuming 'Song' is the property containing the saved song in the response
+      return res.data.Song; 
     } catch (error) {
       console.error("Error saving song:", error);
       return null;
@@ -97,3 +97,15 @@ export const getAllArtist = async () => {
       return null;
     }
   };
+
+
+  export const SaveNewArtist = async (data) => {
+    try {
+      const res = axios.post(`${baseURL}api/artist/save`,{...data});
+      return (await res).data.savedArtist;
+    } catch (error) {
+      return null;
+    }
+    
+    
+  }
