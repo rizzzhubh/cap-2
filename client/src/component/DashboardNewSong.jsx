@@ -14,23 +14,39 @@ import { MdDelete } from "react-icons/md";
 import { storage } from "../config/firebase.config";
 import { useStateValue } from "../context/StateProvider";
 // import FilterButtons from "./FilterButtons";
-import { getAllAlbums, getAllArtist,getAllSongs,saveNewSong } from "../../api";
+import { SaveNewArtist, getAllAlbums, getAllArtist,getAllSongs,saveNewSong } from "../../api";
 import { actionType } from "../context/reducer";
 import { filterByLanguage, filters } from "../utils/Supportfunctions";
 import { IoMusicalNote } from "react-icons/io5";
 import FilterButtons from "./FilterButtons";
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
+
 const DashboardNewSong = () => {
+  
+  const [songName, setSongName] = useState("");
+  const [songImageCover, setSongImageCover] = useState(null);
+  const [ImageLoadProgress, setImageLoadProgress] = useState(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  
   const [audioImageCover, setAudioImageCover] = useState(null);
   const [audioUploadProgress, setAudioUploadProgress] = useState(0);
   const [isAudioLoading,setIsAudioLoading] = useState
   (false)
 
-  const [songName, setSongName] = useState("");
-  const [songImageCover, setSongImageCover] = useState(null);
-  const [isImageLoading, setIsImageLoading] = useState(false);
-  const [ImageLoadProgress, setImageLoadProgress] = useState(null);
+  const [artistImageCover, setArtistImageCover] = useState(null);
+  const [artistUploadingProgress, setArtistUploadingProgress] = useState(0);
+  const [isArtistUploading, setIsArtistUploading] = useState(false); 
+  const [artistName,setArtistName] = useState("")
+  const [twitter,settwitter] = useState("")
+  const [Instagram,setInstagram] = useState("")
+  
+  const [albumImageCover, setAlbumImageCover] = useState(null);
+  const [albumUploadingProgress, setAlbumUploadingProgress] = useState(0);
+  const [isAlbumUploading, setIsAlbumUploading] = useState(false); 
+  const [albumName,setAlbumName] = useState("")
+  
+ 
   const [{ artists, allAlbums,allSongs,artistFilter,albumFilter,filterTerm,languageFilter }, dispatch] = useStateValue();
   useEffect(() => {
       if (!artists) {
@@ -107,6 +123,36 @@ const saveSong = () => {
     setAudioImageCover(null)
 
    }
+}
+const saveArtist = () => {
+  if(!artistImageCover || !artistName || !twitter || !Instagram) {
+    alert("Please Upload Image and Artist Details")
+  }
+  else{
+    setIsArtistUploading(true)
+    const data = {
+        name: artistName,
+        imageURL: artistImageCover,
+        twitter: `www.twitter.com/${twitter}`,
+        instagram: `www.instagram.com/${Instagram}`
+    }
+    SaveNewArtist(data).then((res) => {
+      getAllArtist()
+      .then((data) => {        
+          dispatch({
+              type: actionType.SET_ARTISTS,
+              artists: data.artist,
+            });
+        })
+    })
+    setIsArtistUploading(false)
+    setArtistImageCover(null)
+    setArtistName("")
+    settwitter("")
+    setInstagram("")
+    
+  }
+ 
 }
   return (
     <div className="flex  flex-col items-center justify-center p-4 border border-gray-300">
@@ -189,7 +235,68 @@ const saveSong = () => {
         </button>
       </div>
  </div>
+  
+{/* Artist image uploader */}
+<p className="text-xl font-semibold text-textColor">Artist Details</p>
+
+ <div className="bg-card w-full h-[300px] rounded-md border-2 border-dotted border-gray-300 cursor-pointer ">
+        <div className="w-full h-full flex items-center justify-center">
+        {isArtistUploading && <FileLoader progress={artistUploadingProgress}/>}
+        {!isArtistUploading && (
+          <>
+            {!artistImageCover ? (
+                <FileUpLoader updateState={setArtistImageCover} setProgress ={
+                    setArtistUploadingProgress
+                }  isLoading = {setIsArtistUploading} isImage = {true}/>
+            ): (<div className="relative w-50% h-full flex justify-center items-center">
+    <img src={artistImageCover} className=" w-50% h-50%  border-8 border-gray-800 flex justify-center items-center rounded-xl" alt="Song cover" />
+    <button className="absolute bottom-3 right-3 p-3 rounded-full bg-white text-xl cursor-pointer outline-none text-red-500 hover:text-red-400 duration-200 transition-all ease-in-out" onClick={() => deleteFile(artistImageCover, true)}>
+        <MdDelete/>
+    </button>
+
+</div>
+)}
+          </>
+        )}
+         
+        </div>
+
+      </div>
+      {/* artist name*/}
+
+
+  <input type="text" placeholder="Type Your Artist Name..."  className="w-full p-3 rounded-md text-base font-semibold text-textcolor outline-none border border-gray-300 bg-transparent" value={artistName} onChange={(e) => setArtistName(e.target.value)}/>
+  
+  {/* twitter */}
+  <div className="flex items-center p-1 rounded-md border border-gray-300 w-full ">
+ <p className="text-base font-semibold text-gray-400 px-4 py-2">www.twitter.com/</p>
+ <input type="text" placeholder="your twitter id..."  className="w-full p-3 rounded-md text-base font-semibold text-textColor outline-none  bg-transparent" value={twitter} onChange={(e) => settwitter(e.target.value)} />    
+  </div>
+
+
+    {/* instagram */}
+    <div className="flex items-center p-1 rounded-md border border-gray-300 w-full ">
+ <p className="text-base font-semibold text-gray-400 px-4 py-2">www.instagram.com/</p>
+ <input type="text" placeholder="your insta id..."  className="w-full p-3 rounded-md text-base font-semibold text-textColor outline-none  bg-transparent" value={Instagram} onChange={(e) => setInstagram(e.target.value)} />    
+  </div>
+
+
+
+  <div className="flex items-center justify-center w-73 p-4">
+        <button>
+          {isArtistUploading ? (
+              <DisabledButton/>
+          ) :(
+            <motion.button whileTap={{scale:0.75}} className="px-8 py-2 w-full rounded-md text-white bg-red-600 hover:shadow-lg" onClick={ saveArtist} >
+                Save Artist
+            </motion.button>
+          )}   
+        </button>
+      </div>
+  
     </div>
+
+    
   );
 };
 
