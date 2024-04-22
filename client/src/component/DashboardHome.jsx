@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { FaUsers } from "react-icons/fa";
 import { GiLoveSong, GiMusicalNotes } from "react-icons/gi";
 import { RiUserStarFill } from "react-icons/ri";
-import { getAllAlbums, getAllArtist, getAllSongs, getAllUsers } from "../api";
+import { getAllAlbums, getAllArtist, getAllSongs, getAllUsers } from "../../api";
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import { bgColors } from "../utils/styles";
@@ -23,8 +23,10 @@ export const DashboardCard = ({ icon, name, count }) => {
 };
 
 const DashBoardHome = () => {
-  const [{ allUsers, allSongs, artists, allAlbums }, dispatch] =
+  const [{ allUsers, allSongs, allArtist, allAlbums }, dispatch] =
     useStateValue();
+    console.log("allUsers",allUsers,"allSongs",allSongs,"allArtist",allArtist,"allAlbums",allAlbums)
+
   useEffect(() => {
     if (!allUsers) {
       getAllUsers().then((data) => {
@@ -32,6 +34,7 @@ const DashBoardHome = () => {
           type: actionType.SET_ALL_USERS,
           allUsers: data.data,
         });
+        console.log("useressss",data);
       });
     }
 
@@ -44,7 +47,7 @@ const DashBoardHome = () => {
       });
     }
 
-    if (!artists) {
+    if (!allArtist) {
       getAllArtist().then((data) => {
         dispatch({ type: actionType.SET_ARTISTS, artists: data.data });
       });
@@ -52,22 +55,18 @@ const DashBoardHome = () => {
 
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        dispatch({ type: actionType.SET_ALL_ALBUMNS, allAlbums: data.data });
+        dispatch({ type: actionType.SET_ALL_ALBUMS, allAlbums: data.data });
       });
     }
   }, []);
   return (
     <div className="w-full p-6 flex items-center justify-evenly flex-wrap">
-      {/* prettier-ignore */}
       <DashboardCard icon={<FaUsers className="text-3xl text-textColor" />} name={"Users"} count={allUsers?.length > 0 ? allUsers?.length : 0} />
 
-      {/* prettier-ignore */}
       <DashboardCard icon={<GiLoveSong className="text-3xl text-textColor" />} name={"Songs"} count={allSongs?.length > 0 ? allSongs?.length : 0} />
 
-      {/* prettier-ignore */}
-      <DashboardCard icon={<RiUserStarFill className="text-3xl text-textColor" />} name={"Artist"} count={artists?.length > 0 ? artists?.length : 0} />
+      <DashboardCard icon={<RiUserStarFill className="text-3xl text-textColor" />} name={"Artist"} count={allArtist?.length > 0 ? allArtist?.length : 0} />
 
-      {/* prettier-ignore */}
       <DashboardCard icon={<GiMusicalNotes className="text-3xl text-textColor" />} name={"Album"} count={allAlbums?.length > 0 ? allAlbums?.length : 0} />
     </div>
   );
