@@ -5,6 +5,7 @@ import {getAuth,GoogleAuthProvider, signInWithPopup} from "firebase/auth"
 import {useNavigate} from "react-router-dom"
 import { useStateValue } from '../context/StateProvider';
 import { validateuser } from '../../api';
+import LoginUP from './Login-UP';
 
 const Login = ({setauth}) => {
 
@@ -52,6 +53,8 @@ const Login = ({setauth}) => {
       }
     },[])
   return (
+    <>
+    <LoginUP></LoginUP>
     <div className="relative w-screen h-screen">
   
     <div className="absolute inset-0 bg-darkOverlay flex items-center justify-center p-4">
@@ -66,6 +69,7 @@ const Login = ({setauth}) => {
       </div>
     </div>
   </div>
+  </>
   )
 }
 

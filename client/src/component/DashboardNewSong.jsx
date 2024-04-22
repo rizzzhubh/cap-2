@@ -65,6 +65,11 @@ const DashboardNewSong = () => {
         });
     }
 
+    // const role = sessionStorage.getItem("role")
+    // if(role === "member"){
+    //   alert("U can't access this page")
+    // }
+
     if (!allAlbums) {
       getAllAlbums().then((data) => {
         dispatch({

@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { IoTrash } from "react-icons/io5";
 const SongCard = (data, index) => {
+  console.log(data)
   return (
     <motion.div className="relative w-40 min-w-210 px-2  cursor-pointer bg-gray-500 py-4 rounded-lg shadow-md flex flex-col items-center">
 <motion.img whileHover={{scale:1.4}} src={data.data.imageURL}

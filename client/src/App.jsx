@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { validateuser } from '../api'
 import { useStateValue } from './context/StateProvider'
 import { actionType } from './context/reducer'
+import SignIn from './component/SignIn'
 
 
 
@@ -54,6 +55,7 @@ const App = () => {
     <Route path='/login' element={<Login setauth={setauth}/>}/>
     <Route path='/*' element={<Home/>}/>
     <Route path='dashboard/*' element={<Dashboard/>}/>
+    <Route path='/signIn' element={<SignIn/>}/>
 
     </Routes>
     </div>
